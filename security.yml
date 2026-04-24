@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run OSV Scanner
-        uses: google/osv-scanner-action/osv-scanner-action@v2
+        uses: google/osv-scanner-action/osv-scanner-action@1f1242919d8a60496dd1874b24b62b2370ed4c78 # v1.7.1
         with:
           scan-args: |-
             --format sarif
@@ -35,15 +35,16 @@ jobs:
   source_code_analysis:
     name: Source Code Analysis
     runs-on: ubuntu-latest
-    container:
-      image: returntocorp/semgrep:latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Run Semgrep
-        run: semgrep scan --config .semgrep --sarif --output semgrep.sarif
+        uses: returntocorp/semgrep-action@fcd5ab7459e8d91cb1777481980d1b18b4fc6735
+        with:
+          config: .semgrep
+          generateSarif: "1"
         continue-on-error: true
 
       - name: Upload Semgrep SARIF report
